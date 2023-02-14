@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
 
     bool isMovementPressed;
     bool isRunPressed;
+    bool isFlyPressed;
 
     float groundedGravity = -0.05f;
     float gravity = -9.8f;
@@ -32,6 +33,11 @@ public class PlayerController : MonoBehaviour
 
     float RotationFactorPerFrame = 15.0f;
     float runMultiplier = 3.0f;
+
+    public float jetPackGas = 1.0f;
+    float jetPackThrust = 0.25f;
+    float jetPackConsumptionSpeed = 0.3f;
+    float jetPackRefuelSpeed = 0.1f;
 
 
 
@@ -52,6 +58,8 @@ public class PlayerController : MonoBehaviour
         playerInput.CharacterControls.Run.canceled += OnRun;
         playerInput.CharacterControls.Jump.started += OnJump;
         playerInput.CharacterControls.Jump.canceled += OnJump;
+        playerInput.CharacterControls.Fly.performed += OnFly;
+        playerInput.CharacterControls.Fly.canceled += OnFly;
 
         SetupJumpVariables();
     }
@@ -77,6 +85,7 @@ public class PlayerController : MonoBehaviour
         }
         HandleGravity();
         HandleJump();
+        HandleFly();
     }
     
     private void OnDisable()
@@ -97,6 +106,13 @@ public class PlayerController : MonoBehaviour
     private void OnRun(InputAction.CallbackContext ctx)
     {
         isRunPressed = ctx.ReadValueAsButton();
+    }
+
+    private void OnFly(InputAction.CallbackContext ctx)
+    {
+        Debug.Log("Fly Status: "+ctx.ReadValueAsButton());
+        isFlyPressed = ctx.ReadValueAsButton();
+
     }
 
     private void OnJump(InputAction.CallbackContext ctx)
@@ -123,7 +139,25 @@ public class PlayerController : MonoBehaviour
         }
         else if (!isJumpPressed && isJumping && characterController.isGrounded  )
         {
-            isJumping= false;
+            isJumping = false;
+        }
+    }
+
+    private void HandleFly()
+    {
+        if(characterController.isGrounded)
+        {
+            jetPackGas = Mathf.Min(1.0f, jetPackGas + jetPackRefuelSpeed * Time.deltaTime);
+        }
+
+        if(jetPackGas>0f && isFlyPressed && !characterController.isGrounded)
+        {
+            jetPackGas = Mathf.Max(0f, jetPackGas - jetPackConsumptionSpeed * Time.deltaTime);
+            animator.SetBool(isJumpingHash, true);
+            isJumpAnimating = true;
+            isJumping= true;
+            currentMovement.y = initialJumpVelocity * jetPackThrust;
+            currentRunMovement.y = initialJumpVelocity * jetPackThrust;
         }
     }
 
