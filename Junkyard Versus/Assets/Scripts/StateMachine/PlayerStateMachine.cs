@@ -16,12 +16,12 @@ public class PlayerStateMachine : MonoBehaviour
     Vector3 _currentMovement;
     Vector3 _currentRunMovement;
     Vector3 _appliedMovement;
+    Vector3 _cameraRelativeMovement;
 
     bool _isMovementPressed;
     bool _isRunPressed;
     bool _isFlyPressed;
 
-    float _groundedGravity = -1f;
     float _gravity = -9.8f;
 
     bool _isJumpPressed = false;
@@ -62,7 +62,6 @@ public class PlayerStateMachine : MonoBehaviour
     public int IsFallingHash { get { return _isFallingHash; } }
 
     public float Gravity { get { return _gravity; } }
-    public float GroundedGravity { get { return _groundedGravity; } }
 
     public bool IsJumping { get { return _isJumping; } set { _isJumping = value; } }
 
@@ -126,14 +125,16 @@ public class PlayerStateMachine : MonoBehaviour
 
     private void Start()
     {
-        
+        _characterController.Move(_appliedMovement * Time.deltaTime);
     }
 
     private void Update()
     {
         HandleRotation();
         _currentState.UpdateStates();
-        _characterController.Move(_appliedMovement * Time.deltaTime);
+
+        _cameraRelativeMovement = ConvertToCameraSpace(_appliedMovement);
+        _characterController.Move(_cameraRelativeMovement * Time.deltaTime);
     }
 
     private void SetupJumpVariables()
@@ -177,9 +178,9 @@ public class PlayerStateMachine : MonoBehaviour
     {
         Vector3 positionToLookAt;
 
-        positionToLookAt.x = _currentMovement.x;
+        positionToLookAt.x = _cameraRelativeMovement.x;
         positionToLookAt.y = 0.0f;
-        positionToLookAt.z = _currentMovement.z;
+        positionToLookAt.z = _cameraRelativeMovement.z;
 
         Quaternion currentRotation = transform.rotation;
 
@@ -188,5 +189,26 @@ public class PlayerStateMachine : MonoBehaviour
             Quaternion targetRotation = Quaternion.LookRotation(positionToLookAt);
             transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, _rotationFactorPerFrame * Time.deltaTime);
         }
+    }
+
+    Vector3 ConvertToCameraSpace (Vector3 vectorToRotate)
+    {
+        float currentYValue = vectorToRotate.y;
+
+        Vector3 cameraForward = Camera.main.transform.forward;
+        Vector3 cameraRight = Camera.main.transform.right;
+
+        cameraForward.y = 0;
+        cameraRight.y = 0;
+
+        cameraForward = cameraForward.normalized;
+        cameraRight = cameraRight.normalized;
+
+        Vector3 cameraFowardZProduct = vectorToRotate.z * cameraForward;
+        Vector3 cameraRightXproduct = vectorToRotate.x * cameraRight;
+
+        Vector3 vectorRotatedToCameraSpace = cameraFowardZProduct + cameraRightXproduct;
+        vectorRotatedToCameraSpace.y = currentYValue;
+        return vectorRotatedToCameraSpace;
     }
 }

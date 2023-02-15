@@ -17,8 +17,8 @@ public class PlayerGroundedState : PlayerBaseState, IRootState
 
     public override void UpdateState()
     {
-        CheckSwitchStates();
         Ctx.JetPackGas = Mathf.Min(1.0f, Ctx.JetPackGas + Ctx.JetPackRefuelSpeed * Time.deltaTime);
+        CheckSwitchStates();
     }
 
     public override void ExitState()
@@ -31,6 +31,11 @@ public class PlayerGroundedState : PlayerBaseState, IRootState
         if (Ctx.IsJumpPressed && !Ctx.RequireNewJumpPress)
         {
             SwitchState(Factory.Jump());
+        }
+
+        else if (!Ctx.CharacterController.isGrounded && Ctx.IsFlyPressed)
+        {
+            SwitchState(Factory.Jet());
         }
         else if (!Ctx.CharacterController.isGrounded)
         {
@@ -56,7 +61,7 @@ public class PlayerGroundedState : PlayerBaseState, IRootState
 
     public void HandleGravity()
     {
-        Ctx.CurrentMovementY = Ctx.GroundedGravity;
-        Ctx.AppliedMovementY = Ctx.GroundedGravity;
+        Ctx.CurrentMovementY = Ctx.Gravity;
+        Ctx.AppliedMovementY = Ctx.Gravity;
     }
 }

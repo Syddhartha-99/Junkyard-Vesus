@@ -11,14 +11,14 @@ public class PlayerFallState : PlayerBaseState, IRootState
     }
 
     public override void EnterState()
-    {
+    { 
         Ctx.Animator.SetBool(Ctx.IsFallingHash, true);
     }
 
     public override void UpdateState()
     {
-        CheckSwitchStates();
         HandleGravity();
+        CheckSwitchStates();
     }
 
     public override void ExitState()
@@ -28,10 +28,15 @@ public class PlayerFallState : PlayerBaseState, IRootState
 
     public override void CheckSwitchStates()
     {
-        if (Ctx.CharacterController.isGrounded)
+        if (!Ctx.CharacterController.isGrounded && Ctx.IsFlyPressed)
+        {
+            SwitchState(Factory.Jet());
+        }
+        else if (Ctx.CharacterController.isGrounded)
         {
             SwitchState(Factory.Grounded());
         }
+
     }
 
     public override void InitialiseSubState()

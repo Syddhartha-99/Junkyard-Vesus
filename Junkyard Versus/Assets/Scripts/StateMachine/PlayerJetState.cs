@@ -17,9 +17,7 @@ public class PlayerJetState : PlayerBaseState, IRootState
 
     public override void UpdateState()
     {
-        CheckSwitchStates();
         HandleGravity();
-
 
         if (Ctx.JetPackGas > 0f && Ctx.IsFlyPressed)
         {
@@ -27,6 +25,7 @@ public class PlayerJetState : PlayerBaseState, IRootState
             Ctx.CurrentMovementY = Ctx.InitialJumpVelocity * Ctx.JetPackThrust;
             Ctx.AppliedMovementY = Ctx.InitialJumpVelocity * Ctx.JetPackThrust;
         }
+        CheckSwitchStates();
     }
 
     public override void ExitState()
