@@ -9,7 +9,7 @@ public class jetPackUIScript : MonoBehaviour
 
     Slider slider;
     [SerializeField]
-    PlayerController playerController;
+    PlayerStateMachine playerStateMachine;
     void Start()
     {
         slider = GetComponent<Slider>();
@@ -18,6 +18,6 @@ public class jetPackUIScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        slider.value = playerController.jetPackGas;
+        slider.value = playerStateMachine.JetPackGas;
     }
 }

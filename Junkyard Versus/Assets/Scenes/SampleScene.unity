@@ -1840,19 +1840,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 882165750}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1868555504
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1868555501}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a812921bb1dc2f46a6833082664fd6f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  jetPackGas: 2.46
 --- !u!143 &1868555505
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1871,6 +1858,18 @@ CharacterController:
   m_SkinWidth: 0.035
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &1868555508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1868555501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f1863eb7eb04d844a040094dd2ef505, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1870208301
 GameObject:
   m_ObjectHideFlags: 0
@@ -2359,7 +2358,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d2440bad7993d74781c9bd9c7707d5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerController: {fileID: 1868555504}
+  playerStateMachine: {fileID: 1868555508}
 --- !u!114 &2138139790
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -51,13 +51,13 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""id"": ""f265ced6-a8c5-4e62-bc3e-41b051dccf61"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Hold"",
                     ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""Fly"",
                     ""type"": ""Button"",
-                    ""id"": ""fc1f11ba-6ac1-47d7-adbc-4fce4fcbdc6b"",
+                    ""id"": ""a59528d1-f90c-4fae-8ace-5eb240a3091d"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -177,9 +177,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""2e5d968a-d532-4187-ac21-561842549b31"",
-                    ""path"": ""<Keyboard>/space"",
-                    ""interactions"": ""Hold"",
+                    ""id"": ""9016e480-9d9a-41c3-8e2d-4ca8fbad1017"",
+                    ""path"": ""<Keyboard>/alt"",
+                    ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Fly"",

@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     Vector2 currentMovementInput;
     Vector3 currentMovement;
     Vector3 currentRunMovement;
+    Vector3 appliedMovement;
 
     bool isMovementPressed;
     bool isRunPressed;
@@ -25,7 +26,7 @@ public class PlayerController : MonoBehaviour
 
     bool isJumpPressed = false;
     float initialJumpVelocity;
-    float maxJumpHeight = 3f;
+    float maxJumpHeight = 2f;
     float maxJumpTime = 1f;
     bool isJumping = false;
     int isJumpingHash;
@@ -77,13 +78,16 @@ public class PlayerController : MonoBehaviour
 
         if (isRunPressed)
         {
-            characterController.Move(currentRunMovement * Time.deltaTime);
+            appliedMovement.x = currentRunMovement.x;
+            appliedMovement.z = currentRunMovement.z;
         }
         else
         {
-            characterController.Move(currentMovement * Time.deltaTime);
+            appliedMovement.x = currentMovement.x;
+            appliedMovement.z = currentMovement.z;
         }
-        HandleGravity();
+
+        characterController.Move(appliedMovement * Time.deltaTime);
         HandleJump();
         HandleFly();
     }
@@ -134,8 +138,8 @@ public class PlayerController : MonoBehaviour
             animator.SetBool(isJumpingHash, true);
             isJumpAnimating = true;
             isJumping= true;
-            currentMovement.y = initialJumpVelocity * 0.5f;
-            currentRunMovement.y = initialJumpVelocity * 0.5f;
+            currentMovement.y = initialJumpVelocity;
+            appliedMovement.y = initialJumpVelocity;
         }
         else if (!isJumpPressed && isJumping && characterController.isGrounded  )
         {
@@ -204,25 +208,5 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void HandleGravity()
-    {
-        if (characterController.isGrounded)
-        {
-            if (isJumpAnimating)
-            {
-                animator.SetBool(isJumpingHash, false);
-                isJumpAnimating = false;
-            }
-            currentMovement.y = groundedGravity;
-            currentRunMovement.y = groundedGravity;
-        }
-        else
-        {
-            float previousYVelocity = currentMovement.y;
-            float newYVelocity = currentMovement.y + (gravity * Time.deltaTime);
-            float nextYVelocity = (previousYVelocity + newYVelocity) * 0.5f;
-            currentMovement.y = nextYVelocity;
-            currentRunMovement.y = nextYVelocity;
-        }
-    }
+
 }
