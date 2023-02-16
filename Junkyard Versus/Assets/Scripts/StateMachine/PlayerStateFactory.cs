@@ -11,10 +11,6 @@ public class PlayerStateFactory
     {
         return new PlayerIdleState(_context, this);
     }
-    public PlayerBaseState Walk() 
-    {
-        return new PlayerWalkState(_context, this);
-    }
     public PlayerBaseState Run() 
     {
         return new PlayerRunState(_context, this);

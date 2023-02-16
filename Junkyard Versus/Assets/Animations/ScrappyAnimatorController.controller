@@ -1,31 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1102 &-9030887798021046216
-AnimatorState:
-  serializedVersion: 6
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Dash
-  m_Speed: 1
-  m_CycleOffset: 0
-  m_Transitions: []
-  m_StateMachineBehaviours: []
-  m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
-  m_Mirror: 0
-  m_SpeedParameterActive: 0
-  m_MirrorParameterActive: 0
-  m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
-  m_Motion: {fileID: 0}
-  m_Tag: 
-  m_SpeedParameter: 
-  m_MirrorParameter: 
-  m_CycleOffsetParameter: 
-  m_TimeParameter: 
 --- !u!1101 &-7785442917216518356
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -83,7 +57,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Walk
+  m_Name: Dash
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -93,14 +67,14 @@ AnimatorState:
   - {fileID: -2213323692520577567}
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
+  m_IKOnFeet: 1
   m_WriteDefaultValues: 1
   m_Mirror: 0
   m_SpeedParameterActive: 0
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -203655887218126122, guid: cc340b3ce5a449340b237af777bc1cd2,
+  m_Motion: {fileID: -203655887218126122, guid: 7944377c4747e504483a58ded4d10869,
     type: 3}
   m_Tag: 
   m_SpeedParameter: 
@@ -115,8 +89,8 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: isWalking
+  - m_ConditionMode: 2
+    m_ConditionEvent: isDashing
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: isRunning
@@ -147,7 +121,7 @@ AnimatorStateTransition:
     m_ConditionEvent: isFalling
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: isWalking
+    m_ConditionEvent: isDashing
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: isRunning
@@ -208,7 +182,7 @@ AnimatorState:
   - {fileID: -6571252601022901479}
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
+  m_IKOnFeet: 1
   m_WriteDefaultValues: 1
   m_Mirror: 0
   m_SpeedParameterActive: 0
@@ -233,8 +207,8 @@ AnimatorStateTransition:
   - m_ConditionMode: 2
     m_ConditionEvent: isJumping
     m_EventTreshold: 0
-  - m_ConditionMode: 1
-    m_ConditionEvent: isWalking
+  - m_ConditionMode: 2
+    m_ConditionEvent: isDashing
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: isRunning
@@ -253,6 +227,33 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!1102 &-2435188017461342233
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Aim Idle
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: -203655887218126122, guid: edbff6f0077cbf94ca83dc59ad692e93,
+    type: 3}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
 --- !u!1101 &-2213323692520577567
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -311,6 +312,9 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
+  - m_ConditionMode: 1
+    m_ConditionEvent: isDashing
+    m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: isRunning
     m_EventTreshold: 0
@@ -340,7 +344,7 @@ AnimatorStateTransition:
     m_ConditionEvent: isJumping
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: isWalking
+    m_ConditionEvent: isDashing
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: isRunning
@@ -368,7 +372,7 @@ AnimatorController:
   m_Name: ScrappyAnimatorController
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: isWalking
+  - m_Name: isDashing
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -405,6 +409,40 @@ AnimatorController:
     m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
+  - serializedVersion: 5
+    m_Name: UpperBody
+    m_StateMachine: {fileID: 144849770428746404}
+    m_Mask: {fileID: 31900000, guid: c6682cff14646a246b286b52c6a3e949, type: 2}
+    m_Motions: []
+    m_Behaviours: []
+    m_BlendingMode: 0
+    m_SyncedLayerIndex: -1
+    m_DefaultWeight: 0
+    m_IKPass: 0
+    m_SyncedLayerAffectsTiming: 0
+    m_Controller: {fileID: 9100000}
+--- !u!1107 &144849770428746404
+AnimatorStateMachine:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: UpperBody
+  m_ChildStates:
+  - serializedVersion: 1
+    m_State: {fileID: -2435188017461342233}
+    m_Position: {x: 30, y: 230, z: 0}
+  m_ChildStateMachines: []
+  m_AnyStateTransitions: []
+  m_EntryTransitions: []
+  m_StateMachineTransitions: {}
+  m_StateMachineBehaviours: []
+  m_AnyStatePosition: {x: 50, y: 20, z: 0}
+  m_EntryPosition: {x: 50, y: 120, z: 0}
+  m_ExitPosition: {x: 800, y: 120, z: 0}
+  m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
+  m_DefaultState: {fileID: -2435188017461342233}
 --- !u!1102 &312978669343213176
 AnimatorState:
   serializedVersion: 6
@@ -422,7 +460,7 @@ AnimatorState:
   - {fileID: 7667879914274464231}
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
+  m_IKOnFeet: 1
   m_WriteDefaultValues: 1
   m_Mirror: 0
   m_SpeedParameterActive: 0
@@ -448,7 +486,7 @@ AnimatorStateTransition:
     m_ConditionEvent: isFalling
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: isWalking
+    m_ConditionEvent: isDashing
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: isRunning
@@ -476,7 +514,10 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: isWalking
+    m_ConditionEvent: isDashing
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: isRunning
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -4368742448132163763}
@@ -500,11 +541,11 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: isFalling
-    m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: isJumping
+    m_EventTreshold: 0
+  - m_ConditionMode: 1
+    m_ConditionEvent: isFalling
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 7844638119924245878}
@@ -531,8 +572,8 @@ AnimatorStateTransition:
   - m_ConditionMode: 2
     m_ConditionEvent: isFalling
     m_EventTreshold: 0
-  - m_ConditionMode: 1
-    m_ConditionEvent: isWalking
+  - m_ConditionMode: 2
+    m_ConditionEvent: isDashing
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: isRunning
@@ -596,10 +637,10 @@ AnimatorStateMachine:
     m_Position: {x: 340, y: 110, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 312978669343213176}
-    m_Position: {x: 340, y: 290, z: 0}
+    m_Position: {x: 340, y: 300, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -6893860028770058069}
-    m_Position: {x: 340, y: 210, z: 0}
+    m_Position: {x: 170, y: 210, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 3825496534453906508}
     m_Position: {x: 580, y: 210, z: 0}
@@ -609,9 +650,6 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: 4196483656092357960}
     m_Position: {x: 580, y: 290, z: 0}
-  - serializedVersion: 1
-    m_State: {fileID: -9030887798021046216}
-    m_Position: {x: 340, y: 360, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -631,7 +669,10 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: isWalking
+    m_ConditionEvent: isDashing
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: isRunning
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -6893860028770058069}
@@ -710,7 +751,7 @@ AnimatorStateTransition:
     m_ConditionEvent: isJumping
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: isWalking
+    m_ConditionEvent: isDashing
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: isRunning
@@ -738,7 +779,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: isWalking
+    m_ConditionEvent: isDashing
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: isRunning
@@ -752,7 +793,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
   m_ExitTime: 0.6590909
-  m_HasExitTime: 1
+  m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -795,6 +836,9 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
+  - m_ConditionMode: 2
+    m_ConditionEvent: isDashing
+    m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: isRunning
     m_EventTreshold: 0

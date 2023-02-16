@@ -15,9 +15,9 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Run",
+                    "name": "Dash",
                     "type": "Button",
-                    "id": "f807edf6-0dc0-43fd-a776-c2def7df814d",
+                    "id": "b3a0597f-6e02-42f2-9f95-855c9ee314b6",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -36,6 +36,33 @@
                     "name": "Fly",
                     "type": "Button",
                     "id": "a59528d1-f90c-4fae-8ace-5eb240a3091d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Hold",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Look",
+                    "type": "Value",
+                    "id": "eb53dc7f-7675-44fe-9ccb-600d03de3ead",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Aim",
+                    "type": "Value",
+                    "id": "a402f3d8-b3ac-49f2-b950-607c69d08352",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Shoot",
+                    "type": "Button",
+                    "id": "82183859-86c5-48df-91ab-4910a62d7249",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -111,28 +138,6 @@
                 },
                 {
                     "name": "",
-                    "id": "64ee1fa0-f8df-4cfe-8d9b-27bab22b66ad",
-                    "path": "<Keyboard>/leftShift",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Run",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "a0b0c13f-5ae3-4775-b793-a02f386b8d06",
-                    "path": "<Gamepad>/leftStickPress",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Run",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "9126febe-1fc1-4552-a1c3-f67a3e701758",
                     "path": "<Keyboard>/space",
                     "interactions": "",
@@ -156,11 +161,55 @@
                 {
                     "name": "",
                     "id": "9016e480-9d9a-41c3-8e2d-4ca8fbad1017",
-                    "path": "<Keyboard>/alt",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Fly",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "97f134d7-5608-459a-bba5-5d94392bd648",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "554a75b8-75b8-4d42-bd52-2928468030b5",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Aim",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c2d50254-b8a1-4bf7-8fe6-0ee18ba4374e",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e9070060-01b9-42f3-96ae-e31433f86523",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dash",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -11,7 +11,6 @@ public class PlayerRunState : PlayerBaseState
 
     public override void EnterState()
     {
-        Ctx.Animator.SetBool(Ctx.IsWalkingHash, true);
         Ctx.Animator.SetBool(Ctx.IsRunningHash, true);
     }
 
@@ -24,18 +23,18 @@ public class PlayerRunState : PlayerBaseState
 
     public override void ExitState()
     {
-
+        Ctx.Animator.SetBool(Ctx.IsRunningHash, false);
     }
 
     public override void CheckSwitchStates()
     {
-        if (!Ctx.IsMovementPressed)
+        if (!Ctx.IsMovementPressed && !Ctx.IsDashPressed)
         {
             SwitchState(Factory.Idle());
         }
-        else if (Ctx.IsMovementPressed && !Ctx.IsRunPressed)
+        else if (Ctx.IsMovementPressed && Ctx.IsDashPressed)
         {
-            SwitchState(Factory.Walk());
+            SwitchState(Factory.Dash());
         }
     }
 

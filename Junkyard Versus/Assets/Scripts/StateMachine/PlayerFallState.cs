@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,13 +42,13 @@ public class PlayerFallState : PlayerBaseState, IRootState
 
     public override void InitialiseSubState()
     {
-        if (!Ctx.IsMovementPressed && !Ctx.IsRunPressed)
+        if (!Ctx.IsMovementPressed && !Ctx.IsDashPressed)
         {
             SetSubState(Factory.Idle());
         }
-        else if (Ctx.IsMovementPressed && !Ctx.IsRunPressed)
+        else if (Ctx.IsMovementPressed && Ctx.IsDashPressed)
         {
-            SetSubState(Factory.Walk());
+            SetSubState(Factory.Dash());
         }
         else
         {
@@ -59,6 +60,6 @@ public class PlayerFallState : PlayerBaseState, IRootState
     {
         float previousYVelocity = Ctx.CurrentMovementY;
         Ctx.CurrentMovementY = Ctx.CurrentMovementY + Ctx.Gravity * Time.deltaTime;
-        Ctx.AppliedMovementY = (previousYVelocity + Ctx.CurrentMovementY) * 0.5f;
+        Ctx.AppliedMovementY = MathF.Max((previousYVelocity + Ctx.CurrentMovementY) * 0.5f, -8f);
     }
 }

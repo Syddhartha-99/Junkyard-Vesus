@@ -43,13 +43,13 @@ public class PlayerJetState : PlayerBaseState, IRootState
 
     public override void InitialiseSubState()
     {
-        if (!Ctx.IsMovementPressed && !Ctx.IsRunPressed)
+        if (!Ctx.IsMovementPressed && !Ctx.IsDashPressed)
         {
             SetSubState(Factory.Idle());
         }
-        else if (Ctx.IsMovementPressed && !Ctx.IsRunPressed)
+        else if (Ctx.IsMovementPressed && Ctx.IsDashPressed)
         {
-            SetSubState(Factory.Walk());
+            SetSubState(Factory.Dash());
         }
         else
         {

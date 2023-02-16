@@ -2,25 +2,53 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using Cinemachine;
 
 public class PlayerStateMachine : MonoBehaviour
 {
+    public CinemachineVirtualCamera _followVirtualCamera;
+    public CinemachineVirtualCamera _aimVirtualCamera;
+
+    [SerializeField]
+    private Image _normalReticle;
+    [SerializeField]
+    private Image _aimReticle;
+
+    [SerializeField]
+    private LayerMask aimColliderLayerMask = new LayerMask();
+    [SerializeField]
+    private Transform debugTransform;
+
+
     PlayerInput _playerInput;
     CharacterController _characterController;
     Animator _animator;
 
-    int _isWalkingHash;
+    [SerializeField]
+    private Transform _bulletProjectilePrefab;
+    [SerializeField]
+    private Transform _spawnBulletPosition;
+    private Vector3 _mouseWorldPosition = Vector3.zero;
+
+
+    int _isDashingHash;
     int _isRunningHash;
+    int _isJumpingHash;
+    int _isFallingHash;
 
     Vector2 _currentMovementInput;
     Vector3 _currentMovement;
     Vector3 _currentRunMovement;
     Vector3 _appliedMovement;
+
     Vector3 _cameraRelativeMovement;
 
     bool _isMovementPressed;
-    bool _isRunPressed;
     bool _isFlyPressed;
+    bool _isAimPressed;
+    bool _isDashPressed;
+    bool _isShootPressed;
 
     float _gravity = -9.8f;
 
@@ -29,13 +57,15 @@ public class PlayerStateMachine : MonoBehaviour
     float _maxJumpHeight = 2f;
     float _maxJumpTime = 1f;
     bool _isJumping = false;
-    int _isJumpingHash;
     bool _requireNewJumpPress;
 
-    int _isFallingHash;
+    float _dashGas = 1f;
+    float _dashThrust = 15f;
+    float _dashConsumptionSpeed = 0.5f;
+    float _dashRefuelSpeed = 0.2f;
 
     float _rotationFactorPerFrame = 15.0f;
-    float _runMultiplier = 3.0f;
+    float _runMultiplier = 5f;
 
     float _jetPackGas = 2.5f;
     float _jetPackThrust = 0.25f;
@@ -50,13 +80,14 @@ public class PlayerStateMachine : MonoBehaviour
     public Animator Animator { get { return _animator; } }
 
     public bool IsMovementPressed { get { return _isMovementPressed; } }
-    public bool IsRunPressed { get { return _isRunPressed; } }
+    public bool IsDashPressed { get { return _isDashPressed; } }
     public bool IsJumpPressed { get { return _isJumpPressed; } }
     public bool IsFlyPressed { get { return _isFlyPressed; } }
+    public bool IsAimPressed { get { return _isAimPressed; } }
+    public bool IsShootPressed { get { return _isShootPressed; } }
 
 
-
-    public int IsWalkingHash { get { return _isWalkingHash; } }
+    public int IsDashingHash { get { return _isDashingHash; } }
     public int IsRunningHash { get { return _isRunningHash; } }
     public int IsJumpingHash { get { return _isJumpingHash; } }
     public int IsFallingHash { get { return _isFallingHash; } }
@@ -69,7 +100,7 @@ public class PlayerStateMachine : MonoBehaviour
     public float InitialJumpVelocity { get { return _initialJumpVelocity; } }
 
 
-    public float CurrentMovementY { get { return _currentMovement.y; } set{ _currentMovement.y = value; } }
+    public float CurrentMovementY { get { return _currentMovement.y; } set { _currentMovement.y = value; } }
     public float AppliedMovementY { get { return _appliedMovement.y; } set { _appliedMovement.y = value; } }
     public float AppliedMovementX { get { return _appliedMovement.x; } set { _appliedMovement.x = value; } }
     public float AppliedMovementZ { get { return _appliedMovement.z; } set { _appliedMovement.z = value; } }
@@ -77,11 +108,18 @@ public class PlayerStateMachine : MonoBehaviour
     public float RunMultiplier { get { return _runMultiplier; } }
     public Vector2 CurrentMovementInput { get { return _currentMovementInput; } }
 
+    public Vector3 CameraRelativeMovement { get { return _cameraRelativeMovement; } set { _cameraRelativeMovement = value; } }
+
 
     public float JetPackGas { get { return _jetPackGas; } set { _jetPackGas = value; } }
     public float JetPackThrust { get { return _jetPackThrust; } }
     public float JetPackConsumptionSpeed { get { return _jetPackConsumptionSpeed; } set { _jetPackConsumptionSpeed = value; } }
     public float JetPackRefuelSpeed { get { return _jetPackRefuelSpeed; } set { _jetPackRefuelSpeed = value; } }
+
+    public float DashGas { get { return _dashGas; } set { _dashGas = value; } }
+    public float DashThrust { get { return _dashThrust; } }
+    public float DashConsumptionSpeed { get { return _dashConsumptionSpeed; } }
+    public float DashRefuelSpeed { get { return _dashRefuelSpeed; } set { _dashRefuelSpeed = value; } }
 
     private void Awake()
     {
@@ -93,7 +131,7 @@ public class PlayerStateMachine : MonoBehaviour
         _currentState = _states.Grounded();
         _currentState.EnterState();
 
-        _isWalkingHash = Animator.StringToHash("isWalking");
+        _isDashingHash = Animator.StringToHash("isDashing");
         _isRunningHash = Animator.StringToHash("isRunning");
         _isJumpingHash = Animator.StringToHash("isJumping");
         _isFallingHash = Animator.StringToHash("isFalling");
@@ -101,12 +139,16 @@ public class PlayerStateMachine : MonoBehaviour
         _playerInput.CharacterControls.Move.started += OnMovementInput;
         _playerInput.CharacterControls.Move.canceled += OnMovementInput;
         _playerInput.CharacterControls.Move.performed += OnMovementInput;
-        _playerInput.CharacterControls.Run.started += OnRun;
-        _playerInput.CharacterControls.Run.canceled += OnRun;
+        _playerInput.CharacterControls.Dash.started += OnDash;
+        _playerInput.CharacterControls.Dash.canceled += OnDash;
         _playerInput.CharacterControls.Jump.started += OnJump;
         _playerInput.CharacterControls.Jump.canceled += OnJump;
         _playerInput.CharacterControls.Fly.performed += OnFly;
         _playerInput.CharacterControls.Fly.canceled += OnFly;
+        _playerInput.CharacterControls.Aim.started += OnAim;
+        _playerInput.CharacterControls.Aim.canceled += OnAim;
+        _playerInput.CharacterControls.Shoot.started += OnShoot;
+        _playerInput.CharacterControls.Shoot.canceled += OnShoot;
 
         SetupJumpVariables();
     }
@@ -126,13 +168,21 @@ public class PlayerStateMachine : MonoBehaviour
     private void Start()
     {
         _characterController.Move(_appliedMovement * Time.deltaTime);
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
     {
+        if (!_isDashPressed)
+        {
+            _dashGas = Mathf.Min(1.0f, _dashGas + _dashRefuelSpeed * Time.deltaTime);
+        }
+
         HandleRotation();
         _currentState.UpdateStates();
 
+        HandleShooting();
+        HandleAim();
         _cameraRelativeMovement = ConvertToCameraSpace(_appliedMovement);
         _characterController.Move(_cameraRelativeMovement * Time.deltaTime);
     }
@@ -155,22 +205,30 @@ public class PlayerStateMachine : MonoBehaviour
         _isMovementPressed = _currentMovementInput.x != 0 || _currentMovementInput.y != 0;
     }
 
-    private void OnRun(InputAction.CallbackContext context)
+    private void OnDash(InputAction.CallbackContext context)
     {
-        _isRunPressed = context.ReadValueAsButton();
+        _isDashPressed = context.ReadValueAsButton();
     }
 
     private void OnFly(InputAction.CallbackContext context)
     {
-        Debug.Log("Fly Status: " + context.ReadValueAsButton());
         _isFlyPressed = context.ReadValueAsButton();
-
     }
 
     private void OnJump(InputAction.CallbackContext context)
     {
         _isJumpPressed = context.ReadValueAsButton();
         _requireNewJumpPress = false;
+    }
+
+    private void OnAim(InputAction.CallbackContext context)
+    {
+        _isAimPressed = context.ReadValueAsButton();
+    }
+
+    private void OnShoot(InputAction.CallbackContext context)
+    {
+        _isShootPressed = context.ReadValueAsButton();
     }
 
 
@@ -188,6 +246,51 @@ public class PlayerStateMachine : MonoBehaviour
         {
             Quaternion targetRotation = Quaternion.LookRotation(positionToLookAt);
             transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, _rotationFactorPerFrame * Time.deltaTime);
+        }
+    }
+
+    private void HandleAim()
+    {
+
+        if (_isAimPressed)
+        {
+            _aimVirtualCamera.Priority = 20;
+            _aimReticle.gameObject.SetActive(true);
+            _normalReticle.gameObject.SetActive(false);
+            _animator.SetLayerWeight(1, Mathf.Lerp(_animator.GetLayerWeight(1), 1f, Time.deltaTime * 10f));
+
+        }
+        else
+        {
+            _aimVirtualCamera.Priority = 10;
+            _normalReticle.gameObject.SetActive(true);
+            _aimReticle.gameObject.SetActive(false);
+            _animator.SetLayerWeight(1, Mathf.Lerp(_animator.GetLayerWeight(1), 0f, Time.deltaTime * 10f));
+        }
+
+        Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
+
+        Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
+        {
+            if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, aimColliderLayerMask))
+            {
+                debugTransform.position = raycastHit.point;
+                _mouseWorldPosition = raycastHit.point;
+            }
+        }
+    }
+
+    private void HandleShooting()
+    {
+
+        Vector3 aimDir = (_mouseWorldPosition - _spawnBulletPosition.position).normalized;
+
+        if (_isShootPressed)
+        {
+            _animator.SetLayerWeight(1, 1f);
+
+            Instantiate(_bulletProjectilePrefab, _spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));
+            _isShootPressed = false;
         }
     }
 

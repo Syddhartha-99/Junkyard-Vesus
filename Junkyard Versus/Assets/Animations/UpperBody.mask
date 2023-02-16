@@ -1,0 +1,111 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: UpperBody
+  m_Mask: 00000000000000000000000000000000000000000000000001000000000000000100000000000000000000000000000001000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: MainGuy_Geo
+    m_Weight: 1
+  - m_Path: MainGuy_Geo/BlasterGeo
+    m_Weight: 1
+  - m_Path: MainGuy_Geo/ChestGeo
+    m_Weight: 1
+  - m_Path: MainGuy_Geo/HeadGeo
+    m_Weight: 1
+  - m_Path: MainGuy_Geo/HipsGeo
+    m_Weight: 1
+  - m_Path: MainGuy_Geo/L_AnkleGeo
+    m_Weight: 1
+  - m_Path: MainGuy_Geo/L_Arm1Geo
+    m_Weight: 1
+  - m_Path: MainGuy_Geo/L_CalfGeo
+    m_Weight: 1
+  - m_Path: MainGuy_Geo/L_ElbowGeo
+    m_Weight: 1
+  - m_Path: MainGuy_Geo/L_FeetGeo
+    m_Weight: 1
+  - m_Path: MainGuy_Geo/L_ForearmGeo
+    m_Weight: 1
+  - m_Path: MainGuy_Geo/L_HandGeo
+    m_Weight: 1
+  - m_Path: MainGuy_Geo/L_HipJointGeo
+    m_Weight: 1
+  - m_Path: MainGuy_Geo/L_KneeGeo
+    m_Weight: 1
+  - m_Path: MainGuy_Geo/L_LegGeo
+    m_Weight: 1
+  - m_Path: MainGuy_Geo/L_ShoulderGeo
+    m_Weight: 1
+  - m_Path: MainGuy_Geo/L_WristGeo
+    m_Weight: 1
+  - m_Path: MainGuy_Geo/NeckGeo
+    m_Weight: 1
+  - m_Path: MainGuy_Geo/R_AnkleGeo
+    m_Weight: 1
+  - m_Path: MainGuy_Geo/R_ArmGeo
+    m_Weight: 1
+  - m_Path: MainGuy_Geo/R_CalfGeo
+    m_Weight: 1
+  - m_Path: MainGuy_Geo/R_ElbowGeo
+    m_Weight: 1
+  - m_Path: MainGuy_Geo/R_FeetGeo
+    m_Weight: 1
+  - m_Path: MainGuy_Geo/R_HipJointGeo
+    m_Weight: 1
+  - m_Path: MainGuy_Geo/R_KneeGeo
+    m_Weight: 1
+  - m_Path: MainGuy_Geo/R_Leg1Geo
+    m_Weight: 1
+  - m_Path: MainGuy_Geo/R_ShoulderGeo
+    m_Weight: 1
+  - m_Path: MainGuy_Geo/WaistGeo
+    m_Weight: 1
+  - m_Path: MC_Hips
+    m_Weight: 1
+  - m_Path: MC_Hips/MC_L_Leg
+    m_Weight: 1
+  - m_Path: MC_Hips/MC_L_Leg/MC_L_Knee
+    m_Weight: 1
+  - m_Path: MC_Hips/MC_L_Leg/MC_L_Knee/MC_L_Feet
+    m_Weight: 1
+  - m_Path: MC_Hips/MC_L_Leg/MC_L_Knee/MC_L_Feet/MC_L_Feetend
+    m_Weight: 1
+  - m_Path: MC_Hips/MC_R_Leg
+    m_Weight: 1
+  - m_Path: MC_Hips/MC_R_Leg/MC_R_Knee
+    m_Weight: 1
+  - m_Path: MC_Hips/MC_R_Leg/MC_R_Knee/MC_R_Feet
+    m_Weight: 1
+  - m_Path: MC_Hips/MC_R_Leg/MC_R_Knee/MC_R_Feet/MC_R_Feetend
+    m_Weight: 1
+  - m_Path: MC_Hips/MC_Waist
+    m_Weight: 1
+  - m_Path: MC_Hips/MC_Waist/MC_Torso
+    m_Weight: 1
+  - m_Path: MC_Hips/MC_Waist/MC_Torso/MC_Head
+    m_Weight: 1
+  - m_Path: MC_Hips/MC_Waist/MC_Torso/MC_Head/HeadEnd
+    m_Weight: 1
+  - m_Path: MC_Hips/MC_Waist/MC_Torso/MC_L_Arm
+    m_Weight: 1
+  - m_Path: MC_Hips/MC_Waist/MC_Torso/MC_L_Arm/MC_L_Forearm
+    m_Weight: 1
+  - m_Path: MC_Hips/MC_Waist/MC_Torso/MC_L_Arm/MC_L_Forearm/MC_L_Wrist
+    m_Weight: 1
+  - m_Path: MC_Hips/MC_Waist/MC_Torso/MC_L_Arm/MC_L_Forearm/MC_L_Wrist/MC_L_HandEnd
+    m_Weight: 1
+  - m_Path: MC_Hips/MC_Waist/MC_Torso/MC_R_Arm
+    m_Weight: 1
+  - m_Path: MC_Hips/MC_Waist/MC_Torso/MC_R_Arm/MC_R_Forearm
+    m_Weight: 1
+  - m_Path: MC_Hips/MC_Waist/MC_Torso/MC_R_Arm/MC_R_Forearm/MC_R_Wrist
+    m_Weight: 1
+  - m_Path: MC_Hips/MC_Waist/MC_Torso/MC_R_Arm/MC_R_Forearm/MC_R_Wrist/MC_R_HandEnd
+    m_Weight: 1
