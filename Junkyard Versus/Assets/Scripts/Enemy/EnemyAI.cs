@@ -154,12 +154,6 @@ public class EnemyAI : MonoBehaviour
                 rb.transform.RotateAround(transform.position, new Vector3(0, 1, 0), i*(360/bulletHellSpread));
                 rb.AddForce(rb.transform.forward * 32f, ForceMode.Impulse);
             }
-            for(int i=0; i<bulletHellSpread; i++)
-            {
-                Rigidbody rb = Instantiate(projectile, projectileMuzzle.position, projectileMuzzle.rotation).GetComponent<Rigidbody>();
-                rb.transform.RotateAround(transform.position, new Vector3(1, 0, 0), i*(360/bulletHellSpread));
-                rb.AddForce(rb.transform.forward * 32f, ForceMode.Impulse);
-            }
             ///End of attack code
 
             // Rigidbody rb = Instantiate(projectile, projectileMuzzle.position, Quaternion.identity).GetComponent<Rigidbody>();
