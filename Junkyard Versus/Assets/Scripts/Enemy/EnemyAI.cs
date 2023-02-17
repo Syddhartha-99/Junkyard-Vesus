@@ -33,6 +33,8 @@ public class EnemyAI : MonoBehaviour
     enum BossPhases {phase1, phase2, phase3};
     BossPhases bossPhase = BossPhases.phase1;
 
+    public int bulletHellSpread = 36;
+
     private void Awake()
     {
         enemyCameraTarget = GameObject.Find("EnemyCameraTarget").transform;
@@ -146,18 +148,25 @@ public class EnemyAI : MonoBehaviour
         if (!alreadyAttacked)
         {
             ///Attack code here
-            // for(int i=0; i<=36; i++)
-            // {
-            //     Rigidbody rb = Instantiate(projectile, projectileMuzzle.position, RotatePointAroundPivot(projectileMuzzle.position, transform.position, i*10f)).GetComponent<Rigidbody>();
-            //     rb.AddForce(transform.forward * 32f, ForceMode.Impulse);
-            // }
+            for(int i=0; i<bulletHellSpread; i++)
+            {
+                Rigidbody rb = Instantiate(projectile, projectileMuzzle.position, projectileMuzzle.rotation).GetComponent<Rigidbody>();
+                rb.transform.RotateAround(transform.position, new Vector3(0, 1, 0), i*(360/bulletHellSpread));
+                rb.AddForce(rb.transform.forward * 32f, ForceMode.Impulse);
+            }
+            for(int i=0; i<bulletHellSpread; i++)
+            {
+                Rigidbody rb = Instantiate(projectile, projectileMuzzle.position, projectileMuzzle.rotation).GetComponent<Rigidbody>();
+                rb.transform.RotateAround(transform.position, new Vector3(1, 0, 0), i*(360/bulletHellSpread));
+                rb.AddForce(rb.transform.forward * 32f, ForceMode.Impulse);
+            }
             ///End of attack code
 
-            Rigidbody rb = Instantiate(projectile, projectileMuzzle.position, Quaternion.identity).GetComponent<Rigidbody>();
-            rb.AddForce(transform.forward * 32f, ForceMode.Impulse);
+            // Rigidbody rb = Instantiate(projectile, projectileMuzzle.position, Quaternion.identity).GetComponent<Rigidbody>();
+            // rb.AddForce(transform.forward * 32f, ForceMode.Impulse);
 
             alreadyAttacked = true;
-            Invoke(nameof(ResetAttack), timeBetweenAttacks * 10);
+            Invoke(nameof(ResetAttack), timeBetweenAttacks);
         }
     }
     private void ResetAttack()
@@ -169,6 +178,7 @@ public class EnemyAI : MonoBehaviour
     {
         health -= damage;
 
+        //Don't destroy but change phase
         //if (health <= 0) Invoke(nameof(DestroyEnemy), 0.5f);
     }
     private void DestroyEnemy()

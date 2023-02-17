@@ -1195,7 +1195,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   m_LocalRotation: {x: 0.043183465, y: 0, z: 0, w: 0.9990672}
-  m_LocalPosition: {x: -7.8784275, y: 0.24683031, z: -41.059414}
+  m_LocalPosition: {x: -7.8490257, y: 0.24683031, z: -41.059414}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1695,6 +1695,7 @@ MonoBehaviour:
   phase2AttackRange: 50
   playerInSightRange: 0
   playerInAttackRange: 0
+  bulletHellSpread: 36
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -3858,7 +3859,7 @@ PrefabInstance:
     - target: {fileID: 4819789204936343871, guid: e5d6d0a9fa8607947a81472f20c75c46,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.8784275
+      value: -7.8490257
       objectReference: {fileID: 0}
     - target: {fileID: 4819789204936343871, guid: e5d6d0a9fa8607947a81472f20c75c46,
         type: 3}
@@ -3945,7 +3946,7 @@ PrefabInstance:
     - target: {fileID: 2885857598021674930, guid: d37dce101eb3daa47820949a749f77d9,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.902381
+      value: -7.877338
       objectReference: {fileID: 0}
     - target: {fileID: 2885857598021674930, guid: d37dce101eb3daa47820949a749f77d9,
         type: 3}
