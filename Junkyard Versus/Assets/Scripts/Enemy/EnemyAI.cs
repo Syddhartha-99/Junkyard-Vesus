@@ -36,12 +36,13 @@ public class EnemyAI : MonoBehaviour
     public int bulletHellSpread = 36;
     public bool playerInSightRange, playerInAttackRange;
 
-    enum BossPhases {phase1, phase1to2, phase2, phase2to3, phase3};
+    enum BossPhases {phase1, phase1to2, phase2, phase2to3, phase3, phaseDead};
     BossPhases bossPhase = BossPhases.phase1;
 
     [SerializeField] private healthBarScript healthBar;
 
     [SerializeField] private MeshRenderer attackRangeMesh;
+    private bool attackRangeMeshFlip = false;
     
     private void Awake()
     {
@@ -114,8 +115,46 @@ public class EnemyAI : MonoBehaviour
                 
                 break;
             case BossPhases.phase2to3:
+
+                if(health >= maxHealth)
+                {
+                    //Enter Phase 2
+                    bossPhase = BossPhases.phase3;
+                }
+                health = Mathf.Min(maxHealth, health + 1);
+                healthBar.UpdateHealthBar(maxHealth,health);
+
                 break;
             case BossPhases.phase3:
+                if(health <= 0)
+                {
+                    bossPhase = BossPhases.phaseDead;
+                }
+                else
+                {
+                    if (!playerInSightRange && !playerInAttackRange) Patroling();
+                    if (playerInSightRange && !playerInAttackRange) ChasePlayer();
+                    if (playerInAttackRange && playerInSightRange) BulletMegaHell();
+                }
+                break;
+
+            case BossPhases.phaseDead:
+                if(attackRangeMeshFlip)
+                {
+                    attackRange = Mathf.Min(phase2AttackRange * 5, attackRange + 40f * Time.deltaTime);
+                    if(attackRange>=phase2AttackRange * 5)
+                    {
+                        Destroy(this.gameObject);
+                    }
+                }
+                else
+                {
+                    attackRange = Mathf.Max(0, attackRange - 15f * Time.deltaTime);
+                    if(attackRange <= 0)
+                    {
+                        attackRangeMeshFlip = true;
+                    }
+                }
                 break;
             default:
                 Debug.Log("Error: Unexpected boss phase");
