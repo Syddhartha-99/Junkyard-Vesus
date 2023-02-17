@@ -38,6 +38,9 @@ public class EnemyAI : MonoBehaviour
 
     [SerializeField] private healthBarScript healthBar;
 
+    [SerializeField] private MeshRenderer attackRangeMesh;
+    private bool attackRangeMeshFlip = false;
+    
     private void Awake()
     {
         enemyCameraTarget = GameObject.Find("EnemyCameraTarget").transform;
@@ -58,6 +61,7 @@ public class EnemyAI : MonoBehaviour
                 {
                     //exiting phase1
                     bossPhase = BossPhases.phase1to2;
+                    attackRangeMesh.enabled = true;
                 }
                 else
                 {
@@ -76,7 +80,18 @@ public class EnemyAI : MonoBehaviour
                 }
                 health = Mathf.Min(maxHealth, health + 1);
                 agent.baseOffset = Mathf.Min(phase2HoverHeight, agent.baseOffset + 2 * Time.deltaTime);
-                attackRange = Mathf.Min(phase2AttackRange, attackRange + 2.5f * Time.deltaTime);
+                if(attackRangeMeshFlip)
+                {
+                    attackRange = Mathf.Min(phase2AttackRange, attackRange + 2.5f * Time.deltaTime);
+                }else
+                {
+                    attackRange = Mathf.Max(0, attackRange - 2f * Time.deltaTime);
+                    if(attackRange <= 0)
+                    {
+                        attackRangeMeshFlip = true;
+                    }
+                }
+                
                 healthBar.UpdateHealthBar(maxHealth,health);
 
                 break;
