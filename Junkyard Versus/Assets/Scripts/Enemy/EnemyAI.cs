@@ -27,7 +27,11 @@ public class EnemyAI : MonoBehaviour
 
     [Header("State")]
     public float sightRange, attackRange;
+    public float phase2AttackRange = 50;
     public bool playerInSightRange, playerInAttackRange;
+
+    enum BossPhases {phase1, phase2, phase3};
+    BossPhases bossPhase = BossPhases.phase1;
 
     private void Awake()
     {
@@ -41,13 +45,48 @@ public class EnemyAI : MonoBehaviour
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
 
-        if (!playerInSightRange && !playerInAttackRange) Patroling();
-        if (playerInSightRange && !playerInAttackRange) ChasePlayer();
-        if (playerInAttackRange && playerInSightRange) AttackPlayer();
+        switch(bossPhase)
+        {
+            case BossPhases.phase1:
+                if (health <= 0)
+                {
+                    //exiting phase1
+                    if(agent.baseOffset<=15) //doing transition phase
+                    {
+                        agent.baseOffset = agent.baseOffset + 2 * Time.deltaTime;
+                        attackRange = Mathf.Min(phase2AttackRange, attackRange + 2.5f * Time.deltaTime);
+                    }
+                    else
+                    {
+                        bossPhase = BossPhases.phase2;
+                        health = 2500;
+                    }
+                }
+                else
+                {
+                    if (!playerInSightRange && !playerInAttackRange) Patroling();
+                    if (playerInSightRange && !playerInAttackRange) ChasePlayer();
+                    if (playerInAttackRange && playerInSightRange) AttackPlayer();
+                }
+                
+                break;
+            case BossPhases.phase2:
+                if (!playerInSightRange && !playerInAttackRange) Patroling();
+                if (playerInSightRange && !playerInAttackRange) ChasePlayer();
+                if (playerInAttackRange && playerInSightRange) BulletHell();
+                break;
+            case BossPhases.phase3:
+                break;
+            default:
+                Debug.Log("Error: Unexpected boss phase");
+                break;
+        }
+        
     }
 
     private void Patroling()
     {
+        //Debug.Log("Enemy: Patroling");
         if (!walkPointSet) SearchWalkPoint();
 
         if (walkPointSet)
@@ -73,11 +112,13 @@ public class EnemyAI : MonoBehaviour
 
     private void ChasePlayer()
     {
+        //Debug.Log("Enemy: ChasePlayer,  enemyCameraTarget.position: "+enemyCameraTarget.position);
         agent.SetDestination(enemyCameraTarget.position);
     }
 
     private void AttackPlayer()
     {
+        //Debug.Log("Enemy: AttackPlayer");
         //Make sure enemy doesn't move
         agent.SetDestination(transform.position);
 
@@ -94,6 +135,31 @@ public class EnemyAI : MonoBehaviour
             Invoke(nameof(ResetAttack), timeBetweenAttacks);
         }
     }
+        private void BulletHell()
+    {
+        //Debug.Log("Enemy: AttackPlayer");
+        //Make sure enemy doesn't move
+        agent.SetDestination(transform.position);
+
+        transform.LookAt(enemyCameraTarget.position);
+
+        if (!alreadyAttacked)
+        {
+            ///Attack code here
+            // for(int i=0; i<=36; i++)
+            // {
+            //     Rigidbody rb = Instantiate(projectile, projectileMuzzle.position, RotatePointAroundPivot(projectileMuzzle.position, transform.position, i*10f)).GetComponent<Rigidbody>();
+            //     rb.AddForce(transform.forward * 32f, ForceMode.Impulse);
+            // }
+            ///End of attack code
+
+            Rigidbody rb = Instantiate(projectile, projectileMuzzle.position, Quaternion.identity).GetComponent<Rigidbody>();
+            rb.AddForce(transform.forward * 32f, ForceMode.Impulse);
+
+            alreadyAttacked = true;
+            Invoke(nameof(ResetAttack), timeBetweenAttacks * 10);
+        }
+    }
     private void ResetAttack()
     {
         alreadyAttacked = false;
@@ -103,7 +169,7 @@ public class EnemyAI : MonoBehaviour
     {
         health -= damage;
 
-        if (health <= 0) Invoke(nameof(DestroyEnemy), 0.5f);
+        //if (health <= 0) Invoke(nameof(DestroyEnemy), 0.5f);
     }
     private void DestroyEnemy()
     {
@@ -117,4 +183,12 @@ public class EnemyAI : MonoBehaviour
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, sightRange);
     }
+
+    public Vector3 RotatePointAroundPivot(Vector3 point, Vector3 pivot, Vector3 angles) 
+    {
+        return Quaternion.Euler(angles) * (point - pivot) + pivot;
+    }
+
 }
+
+
