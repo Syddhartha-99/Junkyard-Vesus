@@ -54,7 +54,8 @@ public class EnemyBulletProjectile : MonoBehaviour
             //Get component of enemy and call Take Damage
 
             //Just an example!
-            ///enemies[i].GetComponent<ShootingAi>().TakeDamage(explosionDamage);
+            Debug.Log("Player Hit: "+enemies[i]);
+            enemies[i].GetComponentInParent<PlayerStateMachine>().TakeDamage(explosionDamage);
 
             //Add explosion force (if enemy has a rigidbody)
             if (enemies[i].GetComponent<Rigidbody>())

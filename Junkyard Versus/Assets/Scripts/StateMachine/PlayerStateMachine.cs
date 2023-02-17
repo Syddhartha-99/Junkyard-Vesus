@@ -58,6 +58,8 @@ public class PlayerStateMachine : MonoBehaviour
     float _maxJumpTime = 1f;
     bool _isJumping = false;
     bool _requireNewJumpPress;
+    float maxHealth = 100;
+    float health = 100;
 
     [Header("Dash")]
     [SerializeField]
@@ -73,7 +75,7 @@ public class PlayerStateMachine : MonoBehaviour
 
     [Header("Jetpack")]
     [SerializeField]
-    float _jetPackGas = 2.5f;
+    float _jetPackGas = 1f;
     [SerializeField]
     float _jetPackThrust = 0.25f;
     [SerializeField]
@@ -108,6 +110,8 @@ public class PlayerStateMachine : MonoBehaviour
     public float Gravity { get { return _gravity; } }
 
     public bool IsJumping { get { return _isJumping; } set { _isJumping = value; } }
+    public float Health { get { return health; } }
+    public float MaxHealth { get { return maxHealth; } }
 
     public bool RequireNewJumpPress { get { return _requireNewJumpPress; } set { _requireNewJumpPress = value; } }
     public float InitialJumpVelocity { get { return _initialJumpVelocity; } }
@@ -323,5 +327,13 @@ public class PlayerStateMachine : MonoBehaviour
         Vector3 vectorRotatedToCameraSpace = cameraFowardZProduct + cameraRightXproduct;
         vectorRotatedToCameraSpace.y = currentYValue;
         return vectorRotatedToCameraSpace;
+    }
+
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+
+        //Don't destroy but change phase
+        //if (health <= 0) Invoke(nameof(DestroyEnemy), 0.5f);
     }
 }

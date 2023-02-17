@@ -54,7 +54,10 @@ public class BulletProjectile : MonoBehaviour
             //Get component of enemy and call Take Damage
 
             //Just an example!
-            ///enemies[i].GetComponent<ShootingAi>().TakeDamage(explosionDamage);
+            //Debug.Log("Enemy: "+enemies[i]);
+            //Debug.Log("Enemy.TakeDamage() envoked");
+            enemies[i].GetComponent<EnemyAI>().TakeDamage(explosionDamage);
+            
 
             //Add explosion force (if enemy has a rigidbody)
             if (enemies[i].GetComponent<Rigidbody>())
@@ -71,6 +74,7 @@ public class BulletProjectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        //Debug.Log("Bullet Collided");
         //Don't count collisions with other bullets
         if (collision.collider.CompareTag("Bullet")) return;
 

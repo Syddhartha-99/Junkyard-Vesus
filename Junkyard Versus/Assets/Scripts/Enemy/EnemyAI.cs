@@ -12,6 +12,7 @@ public class EnemyAI : MonoBehaviour
     public LayerMask whatIsGround, whatIsPlayer;
 
     [Header("Stats")]
+    public float maxHealth = 5000;
     public float health;
 
     [Header("Patrolling")]
@@ -27,18 +28,21 @@ public class EnemyAI : MonoBehaviour
 
     [Header("State")]
     public float sightRange, attackRange;
-    public float phase2AttackRange = 50;
+    public float phase2AttackRange = 30;
+    float phase2HoverHeight = 15;
+    public int bulletHellSpread = 36;
     public bool playerInSightRange, playerInAttackRange;
 
-    enum BossPhases {phase1, phase2, phase3};
+    enum BossPhases {phase1, phase1to2, phase2, phase2to3, phase3};
     BossPhases bossPhase = BossPhases.phase1;
 
-    public int bulletHellSpread = 36;
+    [SerializeField] private healthBarScript healthBar;
 
     private void Awake()
     {
         enemyCameraTarget = GameObject.Find("EnemyCameraTarget").transform;
         agent = GetComponent<NavMeshAgent>();
+        healthBar.UpdateHealthBar(maxHealth, health);
     }
 
     private void Update()
@@ -53,16 +57,7 @@ public class EnemyAI : MonoBehaviour
                 if (health <= 0)
                 {
                     //exiting phase1
-                    if(agent.baseOffset<=15) //doing transition phase
-                    {
-                        agent.baseOffset = agent.baseOffset + 2 * Time.deltaTime;
-                        attackRange = Mathf.Min(phase2AttackRange, attackRange + 2.5f * Time.deltaTime);
-                    }
-                    else
-                    {
-                        bossPhase = BossPhases.phase2;
-                        health = 2500;
-                    }
+                    bossPhase = BossPhases.phase1to2;
                 }
                 else
                 {
@@ -72,10 +67,34 @@ public class EnemyAI : MonoBehaviour
                 }
                 
                 break;
+
+            case BossPhases.phase1to2: //Transition Phase
+                if(health >= maxHealth && agent.baseOffset >=phase2HoverHeight && attackRange >= phase2AttackRange)
+                {
+                    //Enter Phase 2
+                    bossPhase = BossPhases.phase2;
+                }
+                health = Mathf.Min(maxHealth, health + 1);
+                agent.baseOffset = Mathf.Min(phase2HoverHeight, agent.baseOffset + 2 * Time.deltaTime);
+                attackRange = Mathf.Min(phase2AttackRange, attackRange + 2.5f * Time.deltaTime);
+                healthBar.UpdateHealthBar(maxHealth,health);
+
+                break;
             case BossPhases.phase2:
-                if (!playerInSightRange && !playerInAttackRange) Patroling();
-                if (playerInSightRange && !playerInAttackRange) ChasePlayer();
-                if (playerInAttackRange && playerInSightRange) BulletHell();
+
+                if(health <= 0)
+                {
+                    bossPhase = BossPhases.phase2to3;
+                }
+                else
+                {
+                    if (!playerInSightRange && !playerInAttackRange) Patroling();
+                    if (playerInSightRange && !playerInAttackRange) ChasePlayer();
+                    if (playerInAttackRange && playerInSightRange) BulletHell();
+                }
+                
+                break;
+            case BossPhases.phase2to3:
                 break;
             case BossPhases.phase3:
                 break;
@@ -171,6 +190,7 @@ public class EnemyAI : MonoBehaviour
     public void TakeDamage(int damage)
     {
         health -= damage;
+        healthBar.UpdateHealthBar(maxHealth, health);
 
         //Don't destroy but change phase
         //if (health <= 0) Invoke(nameof(DestroyEnemy), 0.5f);

@@ -137,4 +137,9 @@ public class GunHandler : MonoBehaviour
         bulletsLeft = magazineSize;
         reloading = false;
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("Bullet Collided");
+    }
 }
