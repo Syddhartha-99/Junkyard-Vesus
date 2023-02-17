@@ -12,7 +12,7 @@ public class PlayerJetState : PlayerBaseState, IRootState
 
     public override void EnterState()
     {
-        Ctx.Animator.SetBool(Ctx.IsFallingHash, true);
+        Ctx.Animator.SetBool(Ctx.IsFlyingHash, true);
     }
 
     public override void UpdateState()
@@ -21,16 +21,31 @@ public class PlayerJetState : PlayerBaseState, IRootState
 
         if (Ctx.JetPackGas > 0f && Ctx.IsFlyPressed)
         {
+            Ctx.Animator.SetBool(Ctx.IsFlyingHash, true);
             Ctx.JetPackGas = Mathf.Max(0f, Ctx.JetPackGas - Ctx.JetPackConsumptionSpeed * Time.deltaTime);
             Ctx.CurrentMovementY = Ctx.InitialJumpVelocity * Ctx.JetPackThrust;
             Ctx.AppliedMovementY = Ctx.InitialJumpVelocity * Ctx.JetPackThrust;
         }
+        else if (Ctx.JetPackGas <= 0 || !Ctx.IsFlyPressed)
+        {
+            Ctx.Animator.SetBool(Ctx.IsFlyingHash, false);
+
+            if (!Ctx.CharacterController.isGrounded)
+            {
+                Ctx.Animator.SetBool(Ctx.IsFallingHash, true);
+            }
+            else if (Ctx.CharacterController.isGrounded)
+            {
+                Ctx.Animator.SetBool(Ctx.IsFallingHash, false);
+            }
+        }
+
         CheckSwitchStates();
     }
 
     public override void ExitState()
     {
-        Ctx.Animator.SetBool(Ctx.IsFallingHash, false);
+        Ctx.Animator.SetBool(Ctx.IsFlyingHash, false);
     }
 
     public override void CheckSwitchStates()

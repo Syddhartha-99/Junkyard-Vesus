@@ -17,7 +17,6 @@ public class PlayerGroundedState : PlayerBaseState, IRootState
 
     public override void UpdateState()
     {
-        Ctx.JetPackGas = Mathf.Min(1.0f, Ctx.JetPackGas + Ctx.JetPackRefuelSpeed * Time.deltaTime);
         CheckSwitchStates();
     }
 

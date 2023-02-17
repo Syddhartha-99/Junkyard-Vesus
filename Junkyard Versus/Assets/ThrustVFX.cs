@@ -25,9 +25,8 @@ public class ThrustVFX : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(_animator.GetBool("isDashing") == true)
+        if(_animator.GetBool("isDashing") == true || _animator.GetBool("isFlying") == true)
         {
-            Debug.Log("Thrusting");
             _MeshThrustVFX.SetActive(true);
         }
         else
@@ -37,9 +36,9 @@ public class ThrustVFX : MonoBehaviour
 
 
         //temp aiming 
-        if(_PlayerSM.IsAimPressed == true)
+        if (_PlayerSM.IsAimPressed == true)
         {
-            playerRig.weight = 1;
+            playerRig.weight = 0.75f;
         }
         else
         {

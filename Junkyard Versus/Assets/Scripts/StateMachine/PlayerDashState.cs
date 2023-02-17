@@ -16,13 +16,16 @@ public class PlayerDashState : PlayerBaseState
 
     public override void UpdateState()
     {
-        if (Ctx.DashGas > 0f && Ctx.IsDashPressed)
+        if (//Ctx.DashGas
+            Ctx.JetPackGas > 0f && Ctx.IsDashPressed)
         {
-            Ctx.DashGas = Mathf.Max(0f, Ctx.DashGas - Ctx.DashConsumptionSpeed * Time.deltaTime);
+            Ctx.JetPackGas = Mathf.Max(0f, Ctx.JetPackGas - Ctx.JetPackConsumptionSpeed * Time.deltaTime);
+            //Ctx.DashGas = Mathf.Max(0f, Ctx.DashGas - Ctx.DashConsumptionSpeed * Time.deltaTime);
             Ctx.AppliedMovementX = Ctx.CurrentMovementInput.x * Ctx.DashThrust;
             Ctx.AppliedMovementZ = Ctx.CurrentMovementInput.y * Ctx.DashThrust;
         }
-        else if (Ctx.DashGas <= 0)
+        else if (//Ctx.DashGas
+            Ctx.JetPackGas <= 0)
         {
             Ctx.AppliedMovementX = Ctx.CurrentMovementInput.x * Ctx.RunMultiplier;
             Ctx.AppliedMovementZ = Ctx.CurrentMovementInput.y * Ctx.RunMultiplier;

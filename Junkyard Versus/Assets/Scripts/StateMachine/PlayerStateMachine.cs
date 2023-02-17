@@ -7,6 +7,9 @@ using Cinemachine;
 
 public class PlayerStateMachine : MonoBehaviour
 {
+    [Header("References")]
+    public GunHandler gunHandler;
+
     public CinemachineVirtualCamera _followVirtualCamera;
     public CinemachineVirtualCamera _aimVirtualCamera;
 
@@ -15,8 +18,7 @@ public class PlayerStateMachine : MonoBehaviour
     [SerializeField]
     private Image _aimReticle;
 
-    [SerializeField]
-    private LayerMask aimColliderLayerMask = new LayerMask();
+    public LayerMask aimColliderLayerMask = new LayerMask();
     [SerializeField]
     private Transform debugTransform;
 
@@ -25,10 +27,6 @@ public class PlayerStateMachine : MonoBehaviour
     CharacterController _characterController;
     Animator _animator;
 
-    [SerializeField]
-    private Transform _bulletProjectilePrefab;
-    [SerializeField]
-    private Transform _spawnBulletPosition;
     private Vector3 _mouseWorldPosition = Vector3.zero;
 
 
@@ -36,6 +34,8 @@ public class PlayerStateMachine : MonoBehaviour
     int _isRunningHash;
     int _isJumpingHash;
     int _isFallingHash;
+    int _isFlyingHash;
+
 
     Vector2 _currentMovementInput;
     Vector3 _currentMovement;
@@ -59,19 +59,30 @@ public class PlayerStateMachine : MonoBehaviour
     bool _isJumping = false;
     bool _requireNewJumpPress;
 
+    [Header("Dash")]
+    [SerializeField]
     float _dashGas = 1f;
+    [SerializeField]
     float _dashThrust = 15f;
-    float _dashConsumptionSpeed = 0.5f;
-    float _dashRefuelSpeed = 0.2f;
 
     float _rotationFactorPerFrame = 15.0f;
+
+    [Header("RunSpeedMultiplier")]
+    [SerializeField]
     float _runMultiplier = 5f;
 
+    [Header("Jetpack")]
+    [SerializeField]
     float _jetPackGas = 2.5f;
+    [SerializeField]
     float _jetPackThrust = 0.25f;
+    [SerializeField]
     float _jetPackConsumptionSpeed = 0.3f;
+    [SerializeField]
     float _jetPackRefuelSpeed = 0.1f;
 
+    [Header("Debug")]
+    [SerializeField]
     PlayerBaseState _currentState;
     PlayerStateFactory _states;
 
@@ -91,6 +102,8 @@ public class PlayerStateMachine : MonoBehaviour
     public int IsRunningHash { get { return _isRunningHash; } }
     public int IsJumpingHash { get { return _isJumpingHash; } }
     public int IsFallingHash { get { return _isFallingHash; } }
+    public int IsFlyingHash { get { return _isFlyingHash; } }
+
 
     public float Gravity { get { return _gravity; } }
 
@@ -110,7 +123,6 @@ public class PlayerStateMachine : MonoBehaviour
 
     public Vector3 CameraRelativeMovement { get { return _cameraRelativeMovement; } set { _cameraRelativeMovement = value; } }
 
-
     public float JetPackGas { get { return _jetPackGas; } set { _jetPackGas = value; } }
     public float JetPackThrust { get { return _jetPackThrust; } }
     public float JetPackConsumptionSpeed { get { return _jetPackConsumptionSpeed; } set { _jetPackConsumptionSpeed = value; } }
@@ -118,14 +130,13 @@ public class PlayerStateMachine : MonoBehaviour
 
     public float DashGas { get { return _dashGas; } set { _dashGas = value; } }
     public float DashThrust { get { return _dashThrust; } }
-    public float DashConsumptionSpeed { get { return _dashConsumptionSpeed; } }
-    public float DashRefuelSpeed { get { return _dashRefuelSpeed; } set { _dashRefuelSpeed = value; } }
 
     private void Awake()
     {
         _playerInput = new PlayerInput();
         _characterController = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
+        gunHandler = GetComponent<GunHandler>();
 
         _states = new PlayerStateFactory(this);
         _currentState = _states.Grounded();
@@ -135,6 +146,7 @@ public class PlayerStateMachine : MonoBehaviour
         _isRunningHash = Animator.StringToHash("isRunning");
         _isJumpingHash = Animator.StringToHash("isJumping");
         _isFallingHash = Animator.StringToHash("isFalling");
+        _isFlyingHash = Animator.StringToHash("isFlying");
 
         _playerInput.CharacterControls.Move.started += OnMovementInput;
         _playerInput.CharacterControls.Move.canceled += OnMovementInput;
@@ -173,9 +185,9 @@ public class PlayerStateMachine : MonoBehaviour
 
     private void Update()
     {
-        if (!_isDashPressed)
+        if (!_isDashPressed && CharacterController.isGrounded)
         {
-            _dashGas = Mathf.Min(1.0f, _dashGas + _dashRefuelSpeed * Time.deltaTime);
+            _jetPackGas = Mathf.Min(1.0f, _jetPackGas + _jetPackRefuelSpeed * Time.deltaTime);
         }
 
         HandleRotation();
@@ -282,15 +294,13 @@ public class PlayerStateMachine : MonoBehaviour
 
     private void HandleShooting()
     {
-
-        Vector3 aimDir = (_mouseWorldPosition - _spawnBulletPosition.position).normalized;
-
-        if (_isShootPressed)
+        if (_isAimPressed)
         {
-            _animator.SetLayerWeight(1, 1f);
-
-            Instantiate(_bulletProjectilePrefab, _spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));
-            _isShootPressed = false;
+            gunHandler.enabled = true;
+        }
+        else
+        {
+            gunHandler.enabled = false;
         }
     }
 
