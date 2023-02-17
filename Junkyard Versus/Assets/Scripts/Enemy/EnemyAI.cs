@@ -24,7 +24,10 @@ public class EnemyAI : MonoBehaviour
     public float timeBetweenAttacks;
     bool alreadyAttacked;
     public GameObject projectile;
-    public Transform projectileMuzzle;
+    public Transform projectileMuzzle1;
+    public Transform projectileMuzzle2;
+    public Transform projectileMuzzle3;
+
 
     [Header("State")]
     public float sightRange, attackRange;
@@ -162,16 +165,44 @@ public class EnemyAI : MonoBehaviour
 
         if (!alreadyAttacked)
         {
-            ///Attack code here
-            Rigidbody rb = Instantiate(projectile, projectileMuzzle.position, Quaternion.identity).GetComponent<Rigidbody>();
+            //Attack code here
+            Rigidbody rb = Instantiate(projectile, projectileMuzzle1.position, Quaternion.identity).GetComponent<Rigidbody>();
             rb.AddForce(transform.forward * 32f, ForceMode.Impulse);
-            ///End of attack code
+            //End of attack code
 
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), timeBetweenAttacks);
         }
     }
-        private void BulletHell()
+    private void BulletHell()
+    {
+        //Debug.Log("Enemy: AttackPlayer");
+        //Make sure enemy doesn't move
+        agent.SetDestination(transform.position);
+
+        transform.LookAt(enemyCameraTarget.position);
+
+        if (!alreadyAttacked)
+        {
+            //Attack code here
+            for(int i=0; i<bulletHellSpread; i++)
+            {
+                Rigidbody rb = Instantiate(projectile, projectileMuzzle1.position, projectileMuzzle1.rotation).GetComponent<Rigidbody>();
+                rb.transform.RotateAround(transform.position, new Vector3(0, 1, 0), i*(360/bulletHellSpread));
+                rb.AddForce(rb.transform.forward * 32f, ForceMode.Impulse);
+            }
+
+            //End of attack code
+
+            // Rigidbody rb = Instantiate(projectile, projectileMuzzle.position, Quaternion.identity).GetComponent<Rigidbody>();
+            // rb.AddForce(transform.forward * 32f, ForceMode.Impulse);
+
+            alreadyAttacked = true;
+            Invoke(nameof(ResetAttack), timeBetweenAttacks);
+        }
+    }
+
+    private void BulletMegaHell()
     {
         //Debug.Log("Enemy: AttackPlayer");
         //Make sure enemy doesn't move
@@ -182,11 +213,19 @@ public class EnemyAI : MonoBehaviour
         if (!alreadyAttacked)
         {
             ///Attack code here
-            for(int i=0; i<bulletHellSpread; i++)
+            for (int i = 0; i < bulletHellSpread; i++)
             {
-                Rigidbody rb = Instantiate(projectile, projectileMuzzle.position, projectileMuzzle.rotation).GetComponent<Rigidbody>();
-                rb.transform.RotateAround(transform.position, new Vector3(0, 1, 0), i*(360/bulletHellSpread));
+                Rigidbody rb = Instantiate(projectile, projectileMuzzle1.position, projectileMuzzle1.rotation).GetComponent<Rigidbody>();
+                rb.transform.RotateAround(transform.position, new Vector3(0, 1, 0), i * (360 / bulletHellSpread));
                 rb.AddForce(rb.transform.forward * 32f, ForceMode.Impulse);
+
+                Rigidbody rb2 = Instantiate(projectile, projectileMuzzle2.position, projectileMuzzle2.rotation).GetComponent<Rigidbody>();
+                rb2.transform.RotateAround(transform.position, new Vector3(0, 1, 0), i * (360 / bulletHellSpread));
+                rb2.AddForce(rb2.transform.forward * 32f, ForceMode.Impulse);
+
+                Rigidbody rb3 = Instantiate(projectile, projectileMuzzle3.position, projectileMuzzle3.rotation).GetComponent<Rigidbody>();
+                rb3.transform.RotateAround(transform.position, new Vector3(0, 1, 0), i * (360 / bulletHellSpread));
+                rb3.AddForce(rb3.transform.forward * 32f, ForceMode.Impulse);
             }
             ///End of attack code
 
@@ -197,6 +236,7 @@ public class EnemyAI : MonoBehaviour
             Invoke(nameof(ResetAttack), timeBetweenAttacks);
         }
     }
+
     private void ResetAttack()
     {
         alreadyAttacked = false;

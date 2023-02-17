@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8915041819590342687}
   m_Layer: 9
   m_Name: Sphere
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -180,8 +180,8 @@ MonoBehaviour:
     m_Bits: 256
   bounciness: 0
   useGravity: 0
-  explosionDamage: 1
-  explosionRange: 1
+  explosionDamage: 5
+  explosionRange: 0.3
   explosionForce: 0
   maxCollisions: 10
   maxLifetime: 1
